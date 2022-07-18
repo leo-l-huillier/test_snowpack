@@ -8,6 +8,7 @@
 SRC	=	main.c 				\
 		lib.c 				\
 		server.c 			\
+		handle_client.c 	\
 		client.c 			\
 		send_and_receive.c 	\
 

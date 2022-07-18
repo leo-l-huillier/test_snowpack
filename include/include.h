@@ -35,9 +35,31 @@ void recv_msg_handler(gvc_t *gvc);
 void send_msg_handler(gvc_t *gvc);
 
 //server side----------------------------------------------
-int server(void);
 
-//lib
+#define MAX_CLIENTS 100
+#define BUFFER_SZ 2048
+
+typedef struct client_s {
+	struct sockaddr_in address;
+	int sockfd;
+	int uid;
+	char name[32];
+} client_t;
+
+typedef struct global_values_server_s {
+    unsigned int cli_count;
+    int leave_flag;
+    int uid;
+    client_t *cli;
+} gvs_t;
+
+int server(void);
+void *handle_client(gvs_t *gvs);
+void send_message(char *s, int uid);
+void queue_remove(int uid);
+
+
+//lib------------------------------------------------------
 void str_overwrite_stdout();
 int my_strstr(char *str , char const *to_find);
 void str_trim_lf (char* arr, int length);

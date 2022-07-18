@@ -14,28 +14,17 @@
 #define MAX_CLIENTS 100
 #define BUFFER_SZ 2048
 
-static _Atomic unsigned int cli_count = 0;
-static int uid = 10;
-
 /* Client structure */
-typedef struct{
+/*typedef struct{
 	struct sockaddr_in address;
 	int sockfd;
 	int uid;
 	char name[32];
-} client_t;
+} client_t;*/
 
 client_t *clients[MAX_CLIENTS];
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-void print_client_addr(struct sockaddr_in addr){
-    printf("%d.%d.%d.%d",
-        addr.sin_addr.s_addr & 0xff,
-        (addr.sin_addr.s_addr & 0xff00) >> 8,
-        (addr.sin_addr.s_addr & 0xff0000) >> 16,
-        (addr.sin_addr.s_addr & 0xff000000) >> 24);
-}
 
 /* Add clients to queue */
 void queue_add(client_t *cl){
@@ -95,6 +84,11 @@ int server(void)
   struct sockaddr_in cli_addr;
   pthread_t tid;
 
+  gvs_t *gvs = malloc(sizeof(gvs_t));
+  gvs->cli_count = 0;
+  gvs->uid = 10;
+  gvs->leave_flag = 0;
+
   /* Socket settings */
   listenfd = socket(AF_INET, SOCK_STREAM, 0);
   serv_addr.sin_family = AF_INET;
@@ -127,24 +121,15 @@ int server(void)
 		socklen_t clilen = sizeof(cli_addr);
 		connfd = accept(listenfd, (struct sockaddr*)&cli_addr, &clilen);
 
-		/* Check if max clients is reached */
-		if((cli_count + 1) == MAX_CLIENTS){
-			printf("Max clients reached. Rejected: ");
-			print_client_addr(cli_addr);
-			printf(":%d\n", cli_addr.sin_port);
-			close(connfd);
-			continue;
-		}
-
 		/* Client settings */
-		client_t *cli = (client_t *)malloc(sizeof(client_t));
-		cli->address = cli_addr;
-		cli->sockfd = connfd;
-		cli->uid = uid++;
+		gvs->cli = (client_t *)malloc(sizeof(client_t));
+		gvs->cli->address = cli_addr;
+		gvs->cli->sockfd = connfd;
+		gvs->cli->uid = gvs->uid++;
 
 		/* Add client to the queue and fork thread */
-		queue_add(cli);
-		pthread_create(&tid, NULL, &handle_client, (void*)cli);
+		queue_add(gvs->cli);
+		pthread_create(&tid, NULL, &handle_client, (void*)gvs);
 
 		/* Reduce CPU usage */
 		sleep(1);

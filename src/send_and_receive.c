@@ -42,10 +42,10 @@ static void wait_for_connection(char *message, gvc_t *gvc)
             sleep(1);
         }
         gvc->is_connected = true;
-		printf("successfully connected to an other uther");
+		    printf("successfully connected to an other uther\n");
         str_overwrite_stdout();
         sleep(1);
-		send(gvc->sockfd, gvc->secret, strlen(gvc->secret), 0);
+		    send(gvc->sockfd, gvc->secret, strlen(gvc->secret), 0);
     }
 }
 
