@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "system_error": "c",
-        "typeindex": "c",
-        "typeinfo": "c"
-    }
-}
