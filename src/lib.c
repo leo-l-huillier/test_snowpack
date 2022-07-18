@@ -1,8 +1,8 @@
 /*
-** , 2022
+** technical test, 2022
 ** test_snowpack
 ** File description:
-** lib.c
+** functions use in several places
 */
 #include "include.h"
 

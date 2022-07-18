@@ -8,10 +8,10 @@
 
 static client_t *get_name_client(client_t *cli, char *name, char *buff_out, gvs_t *gvs)
 {
-	if(recv(cli->sockfd, name, 32, 0) <= 0){
+	if(recv(cli->sockfd, name, 32, 0) <= 0) {
 		printf("Didn't enter the name.\n");
 		gvs->leave_flag = 1;
-	} else{
+	} else {
 		strcpy(cli->name, name);
 		sprintf(buff_out, "%s has joined\n", cli->name);
 		printf("%s", buff_out);
@@ -34,7 +34,7 @@ static void handle_communication(client_t *cli, char *buff_out, gvs_t *gvs)
 					printf("%s\n", buff_out);
 				}
 			}
-		} else if (receive == 0 || strcmp(buff_out, "exit") == 0){
+		} else if (receive == 0) {
 			sprintf(buff_out, "%s has left\n", cli->name);
 			printf("%s", buff_out);
 			send_message(buff_out, cli->uid);
@@ -62,15 +62,11 @@ void *handle_client(gvs_t *gvs)
 	char name[32];
 	
 	gvs->cli_count++;
-	//client_t *cli = (client_t *)arg;
 
 	// Name
 	get_name_client(gvs->cli, name, buff_out, gvs);
-
 	bzero(buff_out, BUFFER_SZ);
-
 	handle_communication(gvs->cli, buff_out, gvs);
-
 	remove_client(gvs->cli, gvs);
 	return NULL;
 }

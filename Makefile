@@ -1,6 +1,6 @@
 ##
 ## technical test, 2022
-## 
+## test_snowpack
 ## File description:
 ## Makefile
 ##

@@ -18,6 +18,8 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 #include <stdbool.h>
+#include <errno.h>
+#include <string.h>
 
 //client side----------------------------------------------
 
@@ -33,6 +35,7 @@ typedef struct global_values_client_s {
 int client(int argc, char **argv);
 void recv_msg_handler(gvc_t *gvc);
 void send_msg_handler(gvc_t *gvc);
+
 
 //server side----------------------------------------------
 
@@ -64,7 +67,5 @@ void str_overwrite_stdout();
 int my_strstr(char *str , char const *to_find);
 void str_trim_lf (char* arr, int length);
 int is_secret(char *secret);
-
-
 
 #endif
